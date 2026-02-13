@@ -1,0 +1,15 @@
+#Note to run this program you must have both the below imports downloaded else run on colab
+import requests
+import pandas as pd
+
+owner = "" #insert file owner here
+repo = "" #insert repo name here
+
+url = f"https://api.github.com/repos/{owner}/{repo}/contributors" 
+
+response = requests.get(url)
+data = response.json()
+
+contributors = pd.DataFrame(data)[["login", "contributions"]]
+
+print(contributors.head()) #This will print out each contributors with their number of commits
