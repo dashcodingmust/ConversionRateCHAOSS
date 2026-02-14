@@ -16,5 +16,5 @@ def investment(owner,repo):
   
   contributors = pd.DataFrame(data)[["login", "contributions"]]
   print(contributors.head()) #This will print out each contributors with their number of commits
-  contributors["investment"]=contributors["contributions"].apply(investment)
+  contributors["investment"]=contributors["contributions"].apply(stage)
   print(contributors.head())
