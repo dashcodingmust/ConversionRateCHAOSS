@@ -4,8 +4,9 @@ import pandas as pd
 
 #This function is to evaulate the level of investment for each contributor
 def stage(x): 
+  y=input("input threshold for D2")
   if x==1: return "D0"  #This is a first time commiter or contributor
-  elif x>5: return "D2" #This is a regular commitor
+  elif x>y: return "D2" #This is a regular commitor
   else: return "D1" 
     
 def investment(owner,repo):
@@ -16,5 +17,5 @@ def investment(owner,repo):
   
   contributors = pd.DataFrame(data)[["login", "contributions"]]
   print(contributors.head()) #This will print out each contributors with their number of commits
-  contributors["investment"]=contributors["contributions"].apply(stage)
+  contributors["investment"]=contributors["contributions"].apply(stage) #Adding a column that will 
   print(contributors.head())
