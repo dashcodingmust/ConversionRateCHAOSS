@@ -4,7 +4,7 @@ import pandas as pd
 
 #This function is to evaulate the level of investment for each contributor
 def stage(x): 
-  y=input("input threshold for D2")
+  y=input("input threshold for a regular commitor")
   if x==1: return "D0"  #This is a first time commiter or contributor
   elif x>y: return "D2" #This is a regular commitor
   else: return "D1" 
