@@ -12,7 +12,7 @@ def stage(x):
 def investment(owner,repo):
   
   url = f"https://api.github.com/repos/{owner}/{repo}/contributors" 
-  response = requests.get(url)
+  response = requests.get(url) #To get data from requests you must be connected to the internet
   data = response.json()
   
   contributors = pd.DataFrame(data)[["login", "contributions"]]
