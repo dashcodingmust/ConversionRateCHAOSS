@@ -19,3 +19,6 @@ def investment(owner,repo):
   print(contributors.head()) #This will print out each contributors with their number of commits
   contributors["investment"]=contributors["contributions"].apply(stage) #Adding a column that will 
   print(contributors.head())
+
+  total_D2=(contributors["investment"]==2).sum()
+  print("Conversion rate", total_D2/len(contributors))
