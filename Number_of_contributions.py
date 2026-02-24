@@ -20,5 +20,5 @@ def investment(owner,repo):
   contributors["investment"]=contributors["contributions"].apply(stage) #Adding a column that will 
   print(contributors.head())
 
-  total_D2=(contributors["investment"]==2).sum()
+  total_D2=(contributors["investment"]=="D2").sum()
   print("Conversion rate", total_D2/len(contributors))
