@@ -1,5 +1,5 @@
 # ConversionRateCHAOSS
-Implement Conversion Rate Metric In Chaoss Software
+inspired by the following weve decided to make a python based project thats simple and effective.
 
 Implement Conversion Rate Metric In Chaoss Software
 Organization: CHAOSS
