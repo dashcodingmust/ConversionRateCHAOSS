@@ -22,7 +22,7 @@ def commit_trend(owner, repo):
     recent = get_commit_count(owner, repo, last_30.isoformat(), now.isoformat())
     previous = get_commit_count(owner, repo, prev_30.isoformat(), last_30.isoformat())
 
-    print("\n📉 Commit Trend Analysis")
+    print("\n Commit Trend Analysis")
     print("-------------------------")
     print("Commits last 30 days:", recent)
     print("Commits previous 30 days:", previous)
@@ -36,10 +36,10 @@ def commit_trend(owner, repo):
     print("Change:", round(change, 2), "%")
 
     if change > 0:
-        print("Trend: Growing 📈")
+        print("Trend: Growing ")
     elif change >= -20:
-        print("Trend: Stable 👍")
+        print("Trend: Stable ")
     elif change >= -50:
-        print("Trend: Declining ⚠")
+        print("Trend: Declining ")
     else:
-        print("Trend: Serious Decline 🚨")
+        print("Trend: Serious Decline ")
