@@ -26,10 +26,10 @@ def pr_merge_rate(owner, repo):
     print("Merge Rate:", round(rate, 2), "%")
 
     if rate >= 80:
-        print("Status: Excellent ✅")
+        print("Status: Excellent ")
     elif rate >= 50:
-        print("Status: Healthy 👍")
+        print("Status: Healthy ")
     elif rate >= 30:
-        print("Status: Concerning ⚠")
+        print("Status: Concerning ")
     else:
         print("Status: Risk 🚨")
