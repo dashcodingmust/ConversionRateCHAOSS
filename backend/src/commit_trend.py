@@ -1,6 +1,7 @@
 import requests
 from datetime import datetime, timedelta
 
+
 def get_commit_count(owner, repo, since, until):
     url = f"https://api.github.com/repos/{owner}/{repo}/commits"
     params = {
@@ -10,7 +11,12 @@ def get_commit_count(owner, repo, since, until):
     }
 
     response = requests.get(url, params=params)
-    return len(response.json())
+    data = response.json()
+
+    if not isinstance(data, list):
+        return 0
+
+    return len(data)
 
 
 def commit_trend(owner, repo):
@@ -22,24 +28,28 @@ def commit_trend(owner, repo):
     recent = get_commit_count(owner, repo, last_30.isoformat(), now.isoformat())
     previous = get_commit_count(owner, repo, prev_30.isoformat(), last_30.isoformat())
 
-    print("\n Commit Trend Analysis")
-    print("-------------------------")
-    print("Commits last 30 days:", recent)
-    print("Commits previous 30 days:", previous)
-
     if previous == 0:
-        print("Not enough past data.")
-        return
+        return {
+            "recent_commits": recent,
+            "previous_commits": previous,
+            "change_percent": None,
+            "trend": "Not enough past data"
+        }
 
     change = ((recent - previous) / previous) * 100
 
-    print("Change:", round(change, 2), "%")
-
     if change > 0:
-        print("Trend: Growing ")
+        trend = "Growing"
     elif change >= -20:
-        print("Trend: Stable ")
+        trend = "Stable"
     elif change >= -50:
-        print("Trend: Declining ")
+        trend = "Declining"
     else:
-        print("Trend: Serious Decline ")
+        trend = "Serious Decline"
+
+    return {
+        "recent_commits": recent,
+        "previous_commits": previous,
+        "change_percent": round(change, 2),
+        "trend": trend
+    }
