@@ -21,15 +21,17 @@ def active_maintainers(owner, repo):
 
     count = len(maintainers)
 
-    print("\n Active Maintainers Report")
-    print("-------------------------------")
-    print("Active maintainers (last 30 days):", count)
-
+    # determine status
     if count >= 5:
-        print("Status: Excellent ")
+        status = "Excellent"
     elif count >= 3:
-        print("Status: Healthy ")
+        status = "Healthy"
     elif count == 2:
-        print("Status: Risk ")
+        status = "Risk"
     else:
-        print("Status: High Risk ")
+        status = "High Risk"
+
+    return {
+        "active_maintainers": count,
+        "status": status
+    }
