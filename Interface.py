@@ -6,39 +6,14 @@ from backend.src.Commit_trend_decline import commit_trend
 from backend.src.Active_maintainers import active_maintainers
 
 
-def main():
+def analyze_repo(owner, repo):
+    results = {}
 
-    print("====================================")
-    print("   GitHub Project Health Analyzer   ")
-    print("====================================\n")
+    results["Contributor Engagement"] = investment(owner, repo)
+    results["Last Commit Activity"] = lastCommitTime(1, owner, repo)
+    results["Commit Trend"] = commit_trend(owner, repo)
+    results["Active Maintainers"] = active_maintainers(owner, repo)
+    results["Issue Backlog"] = issue_backlog(owner, repo)
+    results["PR Merge Rate"] = pr_merge_rate(owner, repo)
 
-    owner = input("Enter repository owner: ")
-    repo = input("Enter repository name: ")
-
-    print("\nRunning analysis...\n")
-
-    print("🔹 Contributor Engagement")
-    investment(owner, repo)
-
-    print("\n🔹 Last Commit Activity")
-    lastCommitTime(1, owner, repo)
-
-    print("\n🔹 Commit Trend")
-    commit_trend(owner, repo)
-
-    print("\n🔹 Active Maintainers")
-    active_maintainers(owner, repo)
-
-    print("\n🔹 Issue Backlog")
-    issue_backlog(owner, repo)
-
-    print("\n🔹 PR Merge Rate")
-    pr_merge_rate(owner, repo)
-
-    print("\n====================================")
-    print("        Analysis Complete ✅        ")
-    print("====================================")
-
-
-if __name__ == "__main__":
-    main()
+    return results
