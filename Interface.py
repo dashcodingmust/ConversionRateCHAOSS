@@ -1,9 +1,9 @@
-from backend.src.Number_of_contributions import investment
+from backend.src.number_of_contributions import investment
 from backend.src.time_of_last_commit import last_commit_time
 from backend.src.issue_backlog import issue_backlog
-from backend.src.PR_merge_rate import pr_merge_rate
-from backend.src.Commit_trend_decline import commit_trend
-from backend.src.Active_maintainers import active_maintainers
+from backend.src.pr_merge_rate import pr_merge_rate
+from backend.src.commit_trend import commit_trend
+from backend.src.active_maintainers import active_maintainers
 
 
 def analyze_repo(owner, repo):
