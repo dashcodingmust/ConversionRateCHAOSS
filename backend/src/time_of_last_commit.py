@@ -6,5 +6,5 @@ def last_commit_time(commits, owner, repo):
     response = requests.get(url)
 
     last_commit = response.json()[0]
-    print(last_commit["commit"]['author']['date'])
+    return { "time of last commit": last_commit["commit"]['author']['date'] }
 
