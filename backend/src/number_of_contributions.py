@@ -27,9 +27,10 @@ def investment(owner, repo):
     contributors["investment"] = contributors["contributions"].apply(
         lambda x: stage(x, threshold)
     )
-
-    print("\nContributor Classification:")
-    print(contributors.head())
-
     total_D2 = (contributors["investment"] == "D2").sum()
-    print("\nConversion rate:", round(total_D2 / len(contributors), 2))
+
+    return {"Contributor Classification:",
+            contributors.head(),
+            "Conversion rate:": round(total_D2 /len(contributors),2)
+           }
+
