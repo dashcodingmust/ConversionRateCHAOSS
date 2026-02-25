@@ -2,13 +2,13 @@ import requests
 
 def backlog_status(issue_count):
     if issue_count <= 20:
-        return "Healthy "
+        return "Healthy"
     elif issue_count <= 100:
-        return "Moderate "
+        return "Moderate"
     elif issue_count <= 500:
-        return "High "
+        return "High"
     else:
-        return "Critical "
+        return "Critical"
 
 
 def issue_backlog(owner, repo):
@@ -17,9 +17,17 @@ def issue_backlog(owner, repo):
     response = requests.get(url)
     data = response.json()
 
-    open_issues = data["open_issues_count"]
+    # safety check (rate limit / invalid repo)
+    if "open_issues_count" not in data:
+        return {
+            "open_issues": 0,
+            "status": "API Error"
+        }
 
-    print("\n Issue Backlog Report")
-    print("------------------------")
-    print("Open Issues:", open_issues)
-    print("Backlog Status:", backlog_status(open_issues))
+    open_issues = data["open_issues_count"]
+    status = backlog_status(open_issues)
+
+    return {
+        "open_issues": open_issues,
+        "status": status
+    }
