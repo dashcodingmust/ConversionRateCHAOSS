@@ -29,8 +29,10 @@ def investment(owner, repo):
     )
     total_D2 = (contributors["investment"] == "D2").sum()
 
+    C_rate=round(total_D2 /len(contributors),2
+
     return {"Contributor Classification:",
             contributors.head(),
-            "Conversion rate:": round(total_D2 /len(contributors),2)
+            "Conversion rate:": C_rate)
            }
 
