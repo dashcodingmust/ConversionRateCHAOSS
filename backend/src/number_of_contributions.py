@@ -31,7 +31,5 @@ def investment(owner, repo):
 
     C_rate=round(total_D2 /len(contributors),2)
 
-    return {"Contributor Classification:",
-            contributors.head(),
-            "Conversion rate:": C_rate}
+    return {"Conversion rate:": C_rate}
 

@@ -18,38 +18,30 @@ def pr_merge_rate(owner, repo):
 
     total = len(pulls)
     rate = merged / total * 100
+    M_rate=round(rate, 2)
 
-    return {"Pull Request Merge Report",
-           "----------------------------",
-           "Closed PRs analyzed:": total,
-           "Merged PRs:": merged, 
-           "Merge Rate:", round(rate, 2), "%",
-            }
+ 
     if rate >= 80:
-        return {"Pull Request Merge Report",
-           "----------------------------",
+        return {
            "Closed PRs analyzed:": total,
            "Merged PRs:": merged, 
-           "Merge Rate:", round(rate, 2), "%",
-            "Status: Excellent "}
+           "Merge Rate:": M_rate,
+            "Status": "Excellent"}
     elif rate >= 50:
-        return {"Pull Request Merge Report",
-           "----------------------------",
-           "Closed PRs analyzed:": total,
+        return {
+            "Closed PRs analyzed:": total,
            "Merged PRs:": merged, 
-           "Merge Rate:", round(rate, 2), "%",
-            "Status: Healthy "}
+           "Merge Rate:": M_rate,
+            "Status": "Healthy"}
     elif rate >= 30:
-        return {"Pull Request Merge Report",
-           "----------------------------",
-           "Closed PRs analyzed:": total,
+        return {
+            "Closed PRs analyzed:": total,
            "Merged PRs:": merged, 
-           "Merge Rate:", round(rate, 2), "%",
-            "Status: Concerning "}
+           "Merge Rate:": M_rate,
+            "Status": "Concerning"}
     else:
-        return {"Pull Request Merge Report",
-           "----------------------------",
-           "Closed PRs analyzed:": total,
+        return {
+            "Closed PRs analyzed:": total,
            "Merged PRs:": merged, 
-           "Merge Rate:", round(rate, 2), "%",
-            "Status: Risk "}
+           "Merge Rate:": M_rate,
+            "Status": "Risk"}
