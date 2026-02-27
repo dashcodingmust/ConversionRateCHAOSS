@@ -25,7 +25,7 @@ if st.button("Analyze Project"):
 
     if owner and repo:
         with st.spinner("Running analysis..."):
-            results = analyze_repo(owner, repo)
+            results = analyze_repo(owner, repo , threshold)
 
         st.success("Analysis Complete")
 
