@@ -4,32 +4,29 @@ import pandas as pd
 # classify contributor
 def stage(x, threshold):
     if x == 1:
-        return "D0"   # first-time contributor
+        return "D0"
     elif x >= threshold:
-        return "D2"   # regular contributor
+        return "D2"
     else:
         return "D1"
 
-def investment(owner, repo):
 
-    try:
-        threshold = int(input("Enter threshold for regular contributor (default 5): "))
-    except ValueError:
-        threshold = 5
+def investment(owner, repo, threshold=5):
 
     url = f"https://api.github.com/repos/{owner}/{repo}/contributors"
     response = requests.get(url)
     data = response.json()
 
+    if not isinstance(data, list) or len(data) == 0:
+        return {"conversion_rate": 0, "status": "API error"}
+
     contributors = pd.DataFrame(data)[["login", "contributions"]]
 
-    # apply classification
     contributors["investment"] = contributors["contributions"].apply(
         lambda x: stage(x, threshold)
     )
+
     total_D2 = (contributors["investment"] == "D2").sum()
+    conversion_rate = round(total_D2 / len(contributors), 2)
 
-    C_rate=round(total_D2 /len(contributors),2)
-
-    return {"Conversion rate:": C_rate}
-
+    return {"conversion_rate": conversion_rate}
