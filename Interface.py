@@ -6,10 +6,10 @@ from backend.src.commit_trend import commit_trend
 from backend.src.active_maintainers import active_maintainers
 
 
-def analyze_repo(owner, repo):
+def analyze_repo(owner, repo, threshold):
     results = {}
 
-    results["Contributor Engagement"] = investment(owner, repo)
+    results["Contributor Engagement"] = investment(owner, repo ,threshold)
     results["Last Commit Activity"] = last_commit_time(1, owner, repo)
     results["Commit Trend"] = commit_trend(owner, repo)
     results["Active Maintainers"] = active_maintainers(owner, repo)
