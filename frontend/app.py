@@ -13,6 +13,14 @@ st.title(" GitHub Project Health Analyzer")
 owner = st.text_input("Repository Owner", placeholder="e.g. tensorflow")
 repo = st.text_input("Repository Name", placeholder="e.g. tensorflow")
 
+threshold = st.number_input(
+    "Regular Contributor Threshold",
+    min_value=2,
+    max_value=100,
+    value=5,
+    step=1
+)
+
 if st.button("Analyze Project"):
 
     if owner and repo:
