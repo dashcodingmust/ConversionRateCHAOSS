@@ -10,7 +10,7 @@ def analyze_repo(owner, repo, threshold):
     results = {}
 
     results["Contributor Engagement"] = investment(owner, repo ,threshold)
-    results["Last Commit Activity"] = last_commit_time(1, owner, repo)
+    results["Last Commit Activity"] = last_commit_time(1000, owner, repo)
     results["Commit Trend"] = commit_trend(owner, repo)
     results["Active Maintainers"] = active_maintainers(owner, repo)
     results["Issue Backlog"] = issue_backlog(owner, repo)
