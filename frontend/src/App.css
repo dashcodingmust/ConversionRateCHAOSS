@@ -5,9 +5,23 @@ body {
   color: white;
 }
 
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+.main {
+  flex: 1;
+  padding: 40px;
+  overflow-y: auto;
+  min-height: 100vh;
+}
+
 .app {
   display: flex;
-  height: 100vh;
+  min-height: 100vh;
 }
 
 /* SIDEBAR */
@@ -139,7 +153,9 @@ body {
 }
 
 .chart-container {
+  position: relative;
   height: 260px;
+  width: 100%;
 }
 
 /* LOADING */

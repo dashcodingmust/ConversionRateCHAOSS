@@ -159,6 +159,10 @@ function App() {
                       },
                     ],
                   }}
+                  options={{
+                    responsive: true,
+                    maintainAspectRatio: false,
+                  }}
                 />
               </Chart>
 
@@ -173,6 +177,10 @@ function App() {
                         backgroundColor: "#ef4444",
                       },
                     ],
+                  }}
+                  options={{
+                    responsive: true,
+                    maintainAspectRatio: false,
                   }}
                 />
               </Chart>
@@ -191,6 +199,10 @@ function App() {
                       },
                     ],
                   }}
+                  options={{
+                    responsive: true,
+                    maintainAspectRatio: false,
+                  }}
                 />
               </Chart>
 
@@ -207,6 +219,10 @@ function App() {
                         backgroundColor: ["#22c55e", "#ef4444"],
                       },
                     ],
+                  }}
+                  options={{
+                    responsive: true,
+                    maintainAspectRatio: false,
                   }}
                 />
               </Chart>
