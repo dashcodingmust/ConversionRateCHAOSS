@@ -1,10 +1,16 @@
-#Note to run this program you must have the below import downloaded else import and run this colab 
 import requests
+from backend.src.config import HEADERS
+def last_commit_time(limit, owner, repo):
 
-def last_commit_time(commits, owner, repo):
-    url = f"https://api.github.com/repos/{owner}/{repo}/commits?per_page={commits}" 
-    response = requests.get(url)
+    url = f"https://api.github.com/repos/{owner}/{repo}/commits"
 
-    last_commit = response.json()[0]
-    return { "time of last commit": last_commit["commit"]['author']['date'] }
+    response =requests.get(url, headers=HEADERS)
 
+    data = response.json()
+
+    if not isinstance(data, list) or len(data) == 0:
+        return "No commit data found"
+
+    last_commit = data[0]
+
+    return last_commit["commit"]["committer"]["date"]

@@ -1,37 +1,30 @@
 import requests
 from datetime import datetime, timedelta
+from backend.src.config import HEADERS
 
 def active_maintainers(owner, repo):
 
     url = f"https://api.github.com/repos/{owner}/{repo}/commits"
-    response = requests.get(url, params={"per_page": 100})
-    commits = response.json()
+    response = requests.get(url, headers=HEADERS)
 
-    cutoff = datetime.utcnow() - timedelta(days=30)
+    data = response.json()
 
+    if not isinstance(data, list):
+        return "GitHub API error"
+
+    cutoff = datetime.utcnow() - timedelta(days=90)
     maintainers = set()
 
-    for commit in commits:
-        date_str = commit["commit"]["author"]["date"]
-        commit_date = datetime.strptime(date_str, "%Y-%m-%dT%H:%M:%SZ")
+    for commit in data:
 
-        if commit_date >= cutoff:
-            if commit["author"]:
-                maintainers.add(commit["author"]["login"])
+        try:
+            date_str = commit["commit"]["author"]["date"]
+            date = datetime.strptime(date_str, "%Y-%m-%dT%H:%M:%SZ")
 
-    count = len(maintainers)
+            if date > cutoff:
+                maintainers.add(commit["commit"]["author"]["name"])
 
-    # determine status
-    if count >= 5:
-        status = "Excellent"
-    elif count >= 3:
-        status = "Healthy"
-    elif count == 2:
-        status = "Risk"
-    else:
-        status = "High Risk"
+        except:
+            continue
 
-    return {
-        "active_maintainers": count,
-        "status": status
-    }
+    return len(maintainers)

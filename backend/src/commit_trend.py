@@ -1,6 +1,6 @@
 import requests
 from datetime import datetime, timedelta
-
+from backend.src.config import HEADERS
 
 def get_commit_count(owner, repo, since, until):
     url = f"https://api.github.com/repos/{owner}/{repo}/commits"
@@ -10,7 +10,7 @@ def get_commit_count(owner, repo, since, until):
         "per_page": 100
     }
 
-    response = requests.get(url, params=params)
+    response = requests.get(url, headers=HEADERS)
     data = response.json()
 
     if not isinstance(data, list):

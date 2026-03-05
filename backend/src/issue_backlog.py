@@ -1,5 +1,5 @@
 import requests
-
+from backend.src.config import HEADERS
 def backlog_status(issue_count):
     if issue_count <= 20:
         return "Healthy"
@@ -14,7 +14,7 @@ def backlog_status(issue_count):
 def issue_backlog(owner, repo):
 
     url = f"https://api.github.com/repos/{owner}/{repo}"
-    response = requests.get(url)
+    response = requests.get(url, headers=HEADERS)
     data = response.json()
 
     # safety check (rate limit / invalid repo)

@@ -1,21 +1,28 @@
 import requests
 import pandas as pd
+from backend.src.config import HEADERS
+
 
 # classify contributor
 def stage(x, threshold):
     if x == 1:
-        return "D0"
+        return "D0"          # one-time contributor
     elif x >= threshold:
-        return "D2"
+        return "D2"          # regular contributor
     else:
-        return "D1"
+        return "D1"          # occasional contributor
 
 
-def investment(owner, repo, threshold=5):
+def investment(owner, repo, threshold=20):
 
-    url = f"https://api.github.com/repos/{owner}/{repo}/contributors"
-    response = requests.get(url)
-    data = response.json()
+    # request more contributors
+    url = f"https://api.github.com/repos/{owner}/{repo}/contributors?per_page=100"
+
+    try:
+        response = requests.get(url, headers=HEADERS)
+        data = response.json()
+    except Exception:
+        return {"conversion_rate": 0, "status": "API error"}
 
     if not isinstance(data, list) or len(data) == 0:
         return {"conversion_rate": 0, "status": "API error"}
@@ -26,7 +33,10 @@ def investment(owner, repo, threshold=5):
         lambda x: stage(x, threshold)
     )
 
-    total_D2 = (contributors["investment"] == "D2").sum()
-    conversion_rate = round(total_D2 / len(contributors), 2)
+    total_contributors = len(contributors)
+    total_regular = (contributors["investment"] == "D2").sum()
+
+    # convert to percentage
+    conversion_rate = round((total_regular / total_contributors) * 100, 2)
 
     return {"conversion_rate": conversion_rate}
