@@ -1,11 +1,9 @@
 import requests
-from backend.src.config import GITHUB_TOKEN
+from backend.src.config import HEADERS
 def last_commit_time(limit, owner, repo):
 
     url = f"https://api.github.com/repos/{owner}/{repo}/commits"
-    HEADERS = {
-    "Authorization": f"token {GITHUB_TOKEN}"
-}
+    
 
     response =requests.get(url, headers=HEADERS)
 

@@ -1,11 +1,9 @@
 import requests
-from backend.src.config import GITHUB_TOKEN
+from backend.src.config import HEADERS
 def pr_merge_rate(owner, repo):
 
     url = f"https://api.github.com/repos/{owner}/{repo}/pulls?state=closed"
-    HEADERS = {
-    "Authorization": f"token {GITHUB_TOKEN}"
-}
+   
     response = requests.get(url, headers=HEADERS)
     data = response.json()
 

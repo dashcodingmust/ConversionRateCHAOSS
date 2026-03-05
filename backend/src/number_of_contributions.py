@@ -1,6 +1,6 @@
 import requests
 import pandas as pd
-from backend.src.config import GITHUB_TOKEN
+from backend.src.config import HEADERS
 
 
 # classify contributor
@@ -17,9 +17,7 @@ def investment(owner, repo, threshold=20):
 
     # request more contributors
     url = f"https://api.github.com/repos/{owner}/{repo}/contributors?per_page=100"
-    HEADERS = {
-    "Authorization": f"token {GITHUB_TOKEN}"
-    }
+    
     try:
         response = requests.get(url, headers=HEADERS)
         data = response.json()

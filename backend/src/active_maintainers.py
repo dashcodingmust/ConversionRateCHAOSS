@@ -1,13 +1,11 @@
 import requests
 from datetime import datetime, timedelta
-from backend.src.config import GITHUB_TOKEN
+from backend.src.config import HEADERS
 
 def active_maintainers(owner, repo):
 
     url = f"https://api.github.com/repos/{owner}/{repo}/commits"
-    HEADERS = {
-    "Authorization": f"token {GITHUB_TOKEN}"
-    }
+    
     response = requests.get(url, headers=HEADERS)
 
     data = response.json()
