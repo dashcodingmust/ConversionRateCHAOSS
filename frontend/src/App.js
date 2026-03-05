@@ -66,7 +66,7 @@ function App() {
       {/* SIDEBAR */}
 
       <div className="sidebar">
-        <h2>⚙ Configuration</h2>
+        <h2> Configuration</h2>
 
         <label>Repository Owner</label>
         <input value={owner} onChange={(e) => setOwner(e.target.value)} />
