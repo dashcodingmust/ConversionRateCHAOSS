@@ -1,5 +1,5 @@
 import requests
-from backend.src.config import HEADERS
+from backend.src.config import GITHUB_TOKEN
 def backlog_status(issue_count):
     if issue_count <= 20:
         return "Healthy"
@@ -14,6 +14,9 @@ def backlog_status(issue_count):
 def issue_backlog(owner, repo):
 
     url = f"https://api.github.com/repos/{owner}/{repo}"
+    HEADERS = {
+    "Authorization": f"token {GITHUB_TOKEN}"
+    }
     response = requests.get(url, headers=HEADERS)
     data = response.json()
 

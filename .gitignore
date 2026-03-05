@@ -4,4 +4,4 @@ __pycache__/
 venv/
 .env
 .streamlit/
-.config
+.config/

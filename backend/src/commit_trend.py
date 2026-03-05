@@ -1,6 +1,6 @@
 import requests
 from datetime import datetime, timedelta
-from backend.src.config import HEADERS
+from backend.src.config import GITHUB_TOKEN
 
 def get_commit_count(owner, repo, since, until):
     url = f"https://api.github.com/repos/{owner}/{repo}/commits"
@@ -9,6 +9,9 @@ def get_commit_count(owner, repo, since, until):
         "until": until,
         "per_page": 100
     }
+    HEADERS = {
+    "Authorization": f"token {GITHUB_TOKEN}"
+}
 
     response = requests.get(url, headers=HEADERS)
     data = response.json()
