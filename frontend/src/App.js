@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import Card from "./components/card";
 import { calculateHealthScore, getHealthStatus } from "./utils/health";
+import RepoHeader from "./components/repo";
 import "./App.css";
 
 import {
@@ -107,34 +108,7 @@ function App() {
 
         {results && (
           <>
-            <div className="repo-header">
-              <div className="repo-info">
-                <h2 className="repo-name">
-                  {owner && repo ? `${owner}/${repo}` : "Repository Overview"}
-                </h2>
-                <div className="repo-meta">
-                  {results && (
-                    <>
-                      <span>
-                        Last Updated: {new Date().toLocaleTimeString()}
-                      </span>
-                      <span
-                        className={`health-badge ${getHealthStatus(healthScore).class}`}
-                      >
-                        {getHealthStatus(healthScore).label}
-                      </span>
-                    </>
-                  )}
-                </div>
-              </div>
-
-              {results && (
-                <div className="repo-health-score">
-                  <div className="score-number">{healthScore}</div>
-                  <div className="score-label">Health Score</div>
-                </div>
-              )}
-            </div>
+            <RepoHeader owner={owner} repo={repo} healthScore={healthScore} />
             <div className="section">
               <h3 className="section-title">🟢 Contribution Health</h3>
               <div className="metrics">
