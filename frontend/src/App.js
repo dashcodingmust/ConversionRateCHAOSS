@@ -134,11 +134,6 @@ function App() {
                 value={results["PR Metrics"]?.merge_rate || 0}
                 icon="🔀"
               />
-              <Card
-                title="Open Issues"
-                value={results["Issue Backlog"]?.open_issues || 0}
-                icon="🐞"
-              />
 
               <Card
                 title="Avg Merge Time (days)"
@@ -162,6 +157,41 @@ function App() {
                 title="Backlog Ratio"
                 value={results["PR Backlog"]?.backlog_ratio || 0}
                 icon="⚖️"
+              />
+              <Card
+                title="Open Issues"
+                value={results["Issue Backlog"]?.open_issues || 0}
+                icon="🐞"
+              />
+
+              <Card
+                title="Recently Closed Issues"
+                value={results["Issue Backlog"]?.recently_closed_issues || 0}
+                icon="📦"
+              />
+
+              <Card
+                title="Issue Backlog Ratio"
+                value={results["Issue Backlog"]?.issue_backlog_ratio || 0}
+                icon="⚖️"
+              />
+
+              <Card
+                title="Last Commit Date"
+                value={
+                  results["Last Commit Time"]?.last_commit_date
+                    ? new Date(
+                        results["Last Commit Time"].last_commit_date,
+                      ).toLocaleDateString()
+                    : "N/A"
+                }
+                icon="🗓️"
+              />
+
+              <Card
+                title="Days Since Last Commit"
+                value={results["Last Commit Time"]?.days_since_last_commit || 0}
+                icon="⏳"
               />
             </div>
 
