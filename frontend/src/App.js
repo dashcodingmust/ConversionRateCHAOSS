@@ -72,6 +72,12 @@ function App() {
       commitScore * 0.2,
   );
 
+  function getHealthStatus(score) {
+    if (score >= 80) return { label: "Healthy", class: "healthy" };
+    if (score >= 50) return { label: "Needs Attention", class: "warning" };
+    return { label: "At Risk", class: "danger" };
+  }
+
   const conversionRate =
     results?.["Contributor Engagement"]?.conversion_rate || 0;
 
@@ -122,7 +128,34 @@ function App() {
 
         {results && (
           <>
-          
+            <div className="repo-header">
+              <div className="repo-info">
+                <h2 className="repo-name">
+                  {owner && repo ? `${owner}/${repo}` : "Repository Overview"}
+                </h2>
+                <div className="repo-meta">
+                  {results && (
+                    <>
+                      <span>
+                        Last Updated: {new Date().toLocaleTimeString()}
+                      </span>
+                      <span
+                        className={`health-badge ${getHealthStatus(healthScore).class}`}
+                      >
+                        {getHealthStatus(healthScore).label}
+                      </span>
+                    </>
+                  )}
+                </div>
+              </div>
+
+              {results && (
+                <div className="repo-health-score">
+                  <div className="score-number">{healthScore}</div>
+                  <div className="score-label">Health Score</div>
+                </div>
+              )}
+            </div>
             <div className="metrics">
               <Card
                 title="Health Score"
