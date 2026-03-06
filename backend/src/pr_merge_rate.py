@@ -82,7 +82,6 @@ def pr_metrics(owner, repo, days=90):
 def pr_backlog(owner, repo, days=90):
     cutoff_date = datetime.now(timezone.utc) - timedelta(days=days)
 
-    # ---- Get Open PR Count ----
     open_url = f"https://api.github.com/repos/{owner}/{repo}"
     repo_response = requests.get(open_url, headers=HEADERS)
 
