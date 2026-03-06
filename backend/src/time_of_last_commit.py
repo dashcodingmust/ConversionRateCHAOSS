@@ -4,7 +4,6 @@ from config import HEADERS
 
 
 async def last_commit_time(owner, repo):
-
     url = f"https://api.github.com/repos/{owner}/{repo}/commits"
 
     async with httpx.AsyncClient() as client:

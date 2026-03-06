@@ -4,13 +4,14 @@ from config import HEADERS
 
 
 async def active_maintainers(owner, repo, days=90):
+    MAX_PAGES = 15
     page = 1
     maintainers = set()
 
     cutoff = datetime.now(timezone.utc) - timedelta(days=days)
     async with httpx.AsyncClient() as client:
 
-        while True:
+        while page <= MAX_PAGES:
             url = f"https://api.github.com/repos/{owner}/{repo}/commits"
             params = {
                 "per_page": 100,

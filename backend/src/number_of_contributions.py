@@ -13,11 +13,12 @@ def stage(x, threshold):
 
 
 async def investment(owner, repo, threshold):
+    MAX_PAGES = 15
     contributors = []
     page = 1
 
     async with httpx.AsyncClient() as client:
-        while True:
+        while page <= MAX_PAGES:
             url = f"https://api.github.com/repos/{owner}/{repo}/contributors?per_page=100&page={page}"
             response = await client.get(url, headers=HEADERS)
 

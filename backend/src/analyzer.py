@@ -4,6 +4,7 @@ from commit_trend import commit_trend
 from pr_merge_rate import pr_metrics
 from issue_backlog import issue_backlog
 from active_maintainers import active_maintainers
+from time_of_last_commit import last_commit_time
 
 async def analyze_repo(owner, repo, threshold):
     results = await asyncio.gather(
@@ -11,7 +12,8 @@ async def analyze_repo(owner, repo, threshold):
         commit_trend(owner, repo),
         pr_metrics(owner, repo),
         issue_backlog(owner, repo),
-        active_maintainers(owner, repo)
+        active_maintainers(owner, repo),
+        last_commit_time(owner, repo)
     )
 
     return combine(results)

@@ -4,7 +4,7 @@ from config import HEADERS
 
 
 async def issue_backlog(owner, repo, days=90):
-
+    MAX_PAGES = 15
     page = 1
     open_issues = 0
     recently_closed = 0
@@ -12,7 +12,7 @@ async def issue_backlog(owner, repo, days=90):
     cutoff = datetime.now(timezone.utc) - timedelta(days=days)
 
     async with httpx.AsyncClient() as client:
-        while True:
+        while page <= MAX_PAGES:
             url = f"https://api.github.com/repos/{owner}/{repo}/issues"
             params = {
                 "state": "open",
@@ -44,7 +44,7 @@ async def issue_backlog(owner, repo, days=90):
    
         page = 1
         
-        while True:
+        while page<=MAX_PAGES:
             url = f"https://api.github.com/repos/{owner}/{repo}/issues"
             params = {
                 "state": "closed",

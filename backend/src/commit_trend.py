@@ -5,6 +5,7 @@ from config import HEADERS
 
 
 async def commit_trend(owner, repo, days=90):
+    
     now = datetime.utcnow()
     since = (now - timedelta(days=days)).isoformat()
 

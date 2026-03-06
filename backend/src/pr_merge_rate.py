@@ -3,7 +3,10 @@ from datetime import datetime, timedelta, timezone
 from config import HEADERS
 
 
+MAX_PAGES = 20  
+
 async def pr_metrics(owner, repo, days=90):
+
     page = 1
     merged = 0
     total_closed = 0
@@ -12,15 +15,17 @@ async def pr_metrics(owner, repo, days=90):
     cutoff_date = datetime.now(timezone.utc) - timedelta(days=days)
 
     async with httpx.AsyncClient() as client:
-        while True:
+
+        while page <= MAX_PAGES:
+
             url = f"https://api.github.com/repos/{owner}/{repo}/pulls"
             params = {
-            "state": "closed",
-            "per_page": 100,
-            "page": page,
-            "sort": "updated",
-            "direction": "desc"
-        }
+                "state": "closed",
+                "per_page": 100,
+                "page": page,
+                "sort": "updated",
+                "direction": "desc"
+            }
 
             response = await client.get(
                 url,
@@ -33,32 +38,36 @@ async def pr_metrics(owner, repo, days=90):
                 break
 
             data = response.json()
-
             if not data:
                 break
 
+            all_older_than_cutoff = True
+
             for pr in data:
+
                 closed_at = datetime.fromisoformat(
                     pr["closed_at"].replace("Z", "+00:00")
                 )
 
-                if closed_at < cutoff_date:
-                    continue
+                if closed_at >= cutoff_date:
+                    all_older_than_cutoff = False
+                    total_closed += 1
 
-                total_closed += 1
+                    if pr.get("merged_at") is not None:
+                        merged += 1
 
-                if pr.get("merged_at") is not None:
-                    merged += 1
+                        created_at = datetime.fromisoformat(
+                            pr["created_at"].replace("Z", "+00:00")
+                        )
+                        merged_at = datetime.fromisoformat(
+                            pr["merged_at"].replace("Z", "+00:00")
+                        )
 
-                    created_at = datetime.fromisoformat(
-                        pr["created_at"].replace("Z", "+00:00")
-                    )
-                    merged_at = datetime.fromisoformat(
-                        pr["merged_at"].replace("Z", "+00:00")
-                    )
+                        merge_time_days = (merged_at - created_at).days
+                        total_merge_time_days += merge_time_days
 
-                    merge_time_days = (merged_at - created_at).days
-                    total_merge_time_days += merge_time_days
+            if all_older_than_cutoff:
+                break
 
             page += 1
 
@@ -80,61 +89,87 @@ async def pr_metrics(owner, repo, days=90):
         "avg_merge_time_days": avg_merge_time
     }
 
-def pr_backlog(owner, repo, days=90):
-    cutoff_date = datetime.now(timezone.utc) - timedelta(days=days)
 
-    open_url = f"https://api.github.com/repos/{owner}/{repo}"
-    repo_response = requests.get(open_url, headers=HEADERS)
 
-    if repo_response.status_code != 200:
-        return {
-            "open_prs": 0,
-            "recently_closed_prs": 0,
-            "backlog_ratio": 0
-        }
-
-    repo_data = repo_response.json()
-    open_prs = repo_data.get("open_issues_count", 0)
+async def pr_backlog(owner, repo, days=90):
 
     page = 1
+    open_prs = 0
     recently_closed = 0
 
-    while True:
-        pulls_url = f"https://api.github.com/repos/{owner}/{repo}/pulls"
-        params = {
-            "state": "closed",
-            "per_page": 100,
-            "page": page,
-            "sort": "updated",
-            "direction": "desc"
-        }
+    cutoff_date = datetime.now(timezone.utc) - timedelta(days=days)
 
-        response = requests.get(
-            pulls_url,
-            headers=HEADERS,
-            params=params,
-            timeout=10
-        )
+    async with httpx.AsyncClient() as client:
 
-        if response.status_code != 200:
-            break
+        while page <= MAX_PAGES:
 
-        data = response.json()
+            url = f"https://api.github.com/repos/{owner}/{repo}/pulls"
+            params = {
+                "state": "open",
+                "per_page": 100,
+                "page": page
+            }
 
-        if not data:
-            break
-
-        for pr in data:
-            closed_at = datetime.fromisoformat(
-                pr["closed_at"].replace("Z", "+00:00")
+            response = await client.get(
+                url,
+                headers=HEADERS,
+                params=params,
+                timeout=10
             )
 
-            if closed_at < cutoff_date:
-                continue
+            if response.status_code != 200:
+                break
 
-            recently_closed += 1
+            data = response.json()
+            if not data:
+                break
 
-        page += 1
+            open_prs += len(data)
+            page += 1
+
+        page = 1
+
+        while page <= MAX_PAGES:
+
+            url = f"https://api.github.com/repos/{owner}/{repo}/pulls"
+            params = {
+                "state": "closed",
+                "per_page": 100,
+                "page": page,
+                "sort": "updated",
+                "direction": "desc"
+            }
+
+            response = await client.get(
+                url,
+                headers=HEADERS,
+                params=params,
+                timeout=10
+            )
+
+            if response.status_code != 200:
+                break
+
+            data = response.json()
+            if not data:
+                break
+
+            all_older_than_cutoff = True
+
+            for pr in data:
+
+                closed_at = datetime.fromisoformat(
+                    pr["closed_at"].replace("Z", "+00:00")
+                )
+
+                if closed_at >= cutoff_date:
+                    all_older_than_cutoff = False
+                    recently_closed += 1
+
+            if all_older_than_cutoff:
+                break
+
+            page += 1
 
     backlog_ratio = (
         round(open_prs / recently_closed, 2)
