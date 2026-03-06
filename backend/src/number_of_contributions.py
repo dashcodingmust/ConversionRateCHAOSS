@@ -2,7 +2,14 @@ import requests
 import pandas as pd
 from backend.src.config import HEADERS
 
-    
+
+def stage(x, threshold):
+    if x <= 1:
+        return "D0"          
+    elif x >= threshold:
+        return "D2"         
+    else:
+        return "D1"          
 
 
 def investment(owner, repo, threshold):
@@ -42,4 +49,25 @@ def investment(owner, repo, threshold):
         (total_regular / total_contributors) * 100, 2
     )
 
-    return {"conversion_rate": conversion_rate}
+    stage_counts = {"D0": 0, "D1": 0, "D2": 0}
+
+    for c in contributors:
+        contributions = c["contributions"]
+
+        if contributions <= 1:
+            stage_counts["D0"] += 1
+        elif contributions < threshold:
+            stage_counts["D1"] += 1
+        else:
+            stage_counts["D2"] += 1
+
+    total_contributors = len(contributors)
+
+    conversion_rate = round(
+        (stage_counts["D2"] / total_contributors) * 100, 2
+    ) if total_contributors > 0 else 0
+
+    return {
+        "conversion_rate": conversion_rate,
+        "stage_distribution": stage_counts
+    }
