@@ -1,55 +1,69 @@
 import requests
 from datetime import datetime, timedelta
+from collections import defaultdict
 from backend.src.config import HEADERS
 
-def get_commit_count(owner, repo, since, until):
-    url = f"https://api.github.com/repos/{owner}/{repo}/commits"
-    params = {
-        "since": since,
-        "until": until,
-        "per_page": 100
-    }
 
-    response = requests.get(url, headers=HEADERS)
-    data = response.json()
-
-    if not isinstance(data, list):
-        return 0
-
-    return len(data)
-
-
-def commit_trend(owner, repo):
-
+def commit_trend(owner, repo, days=90):
     now = datetime.utcnow()
-    last_30 = now - timedelta(days=30)
-    prev_30 = now - timedelta(days=60)
+    since = (now - timedelta(days=days)).isoformat()
 
-    recent = get_commit_count(owner, repo, last_30.isoformat(), now.isoformat())
-    previous = get_commit_count(owner, repo, prev_30.isoformat(), last_30.isoformat())
+    page = 1
+    commits = []
 
-    if previous == 0:
-        return {
-            "recent_commits": recent,
-            "previous_commits": previous,
-            "change_percent": None,
-            "trend": "Not enough past data"
+    while True:
+        url = f"https://api.github.com/repos/{owner}/{repo}/commits"
+        params = {
+            "since": since,
+            "per_page": 100,
+            "page": page
         }
 
-    change = ((recent - previous) / previous) * 100
+        response = requests.get(
+            url,
+            headers=HEADERS,
+            params=params,
+            timeout=10
+        )
 
-    if change > 0:
-        trend = "Growing"
-    elif change >= -20:
-        trend = "Stable"
-    elif change >= -50:
-        trend = "Declining"
-    else:
-        trend = "Serious Decline"
+        if response.status_code == 403:
+            return {"status": "Rate limit exceeded"}
+
+        if response.status_code != 200:
+            return {"status": "API error"}
+
+        data = response.json()
+
+        if not data:
+            break
+
+        commits.extend(data)
+        page += 1
+
+    weekly_counts = defaultdict(int)
+
+    for commit in commits:
+        date_str = commit["commit"]["author"]["date"]
+        date_obj = datetime.fromisoformat(date_str.replace("Z", "+00:00"))
+
+        week_start = date_obj - timedelta(days=date_obj.weekday())
+        week_label = week_start.strftime("%Y-%m-%d")
+
+        weekly_counts[week_label] += 1
+
+    # Generate full week timeline
+    start_date = now - timedelta(days=days)
+    current_week = start_date - timedelta(days=start_date.weekday())
+
+    all_weeks = []
+    while current_week <= now:
+        week_label = current_week.strftime("%Y-%m-%d")
+        all_weeks.append(week_label)
+        current_week += timedelta(days=7)
+
+    commit_counts = [weekly_counts.get(week, 0) for week in all_weeks]
 
     return {
-        "recent_commits": recent,
-        "previous_commits": previous,
-        "change_percent": round(change, 2),
-        "trend": trend
+        "labels": all_weeks,
+        "commit_counts": commit_counts
     }
