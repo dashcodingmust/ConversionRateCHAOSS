@@ -23,7 +23,7 @@ class RepoRequest(BaseModel):
 
 
 @app.post("/analyze")
-def analyze(data: RepoRequest):
+async def analyze(data: RepoRequest):
 
     results = analyze_repo(data.owner, data.repo, data.threshold)
     return results
