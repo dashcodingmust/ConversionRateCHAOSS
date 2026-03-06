@@ -2,7 +2,8 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 
-from Interface import analyze_repo
+from analyzer import analyze_repo
+
 
 
 app = FastAPI()
@@ -24,6 +25,11 @@ class RepoRequest(BaseModel):
 
 @app.post("/analyze")
 async def analyze(data: RepoRequest):
-
-    results = analyze_repo(data.owner, data.repo, data.threshold)
-    return results
+    start = time.time()
+    result= await analyze_repo(
+        data.owner,
+        data.repo,
+        data.threshold
+    )
+    print("Total Time:", time.time() - start)
+    return result
