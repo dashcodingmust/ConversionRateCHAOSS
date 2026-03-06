@@ -51,7 +51,6 @@ def commit_trend(owner, repo, days=90):
 
         weekly_counts[week_label] += 1
 
-    # Generate full week timeline
     start_date = now - timedelta(days=days)
     current_week = start_date - timedelta(days=start_date.weekday())
 
