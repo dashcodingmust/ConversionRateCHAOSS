@@ -1,11 +1,11 @@
 import requests
 from datetime import datetime, timedelta, timezone
-from backend.src.config import HEADERS
+from config import HEADERS
 
 
 def active_maintainers(owner, repo, days=90):
     page = 1
-    maintainers = set()
+    maintainers = 0
 
     cutoff = datetime.now(timezone.utc) - timedelta(days=days)
 
@@ -41,8 +41,8 @@ def active_maintainers(owner, repo, days=90):
                 continue
 
             if commit.get("author") and commit["author"].get("login"):
-                maintainers.add(commit["author"]["login"])
+                maintainers += 1
 
         page += 1
 
-    return len(maintainers)
+    return maintainers
