@@ -76,7 +76,6 @@ function App() {
 
   return (
     <div className="app">
-      {/* SIDEBAR */}
       <div className="sidebar">
         <h2>Configuration</h2>
 
@@ -102,7 +101,6 @@ function App() {
         </button>
       </div>
 
-      {/* MAIN */}
       <div className="main">
         <h1 className="title">GitHub Project Health Dashboard</h1>
 
@@ -115,7 +113,6 @@ function App() {
 
         {results && (
           <>
-            {/* METRICS */}
             <div className="metrics">
               <Card title="Health Score" value={healthScore} icon="💚" />
               <Card
@@ -135,9 +132,7 @@ function App() {
               />
             </div>
 
-            {/* CHARTS */}
             <div className="chart-grid">
-              {/* Weekly Trend */}
               <Chart title="Weekly Commit Trend">
                 <Line
                   data={{
@@ -163,35 +158,35 @@ function App() {
                 />
               </Chart>
 
-              {/* Conversion Gauge */}
               <Chart title="Conversion Rate Gauge">
-                <Doughnut
-                  data={{
-                    labels: ["Converted", "Remaining"],
-                    datasets: [
-                      {
-                        data: [conversionRate, 100 - conversionRate],
-                        backgroundColor: ["#22c55e", "#1e293b"],
-                        borderWidth: 0,
-                      },
-                    ],
-                  }}
-                  options={{
-                    rotation: -90,
-                    circumference: 180,
-                    cutout: "70%",
-                    plugins: {
-                      legend: { display: false },
-                      tooltip: { enabled: false },
-                    },
-                  }}
-                />
-                <div style={{ textAlign: "center", marginTop: "-20px" }}>
-                  <h2>{conversionRate}%</h2>
+                <div className="gauge-wrapper">
+                  <div className="gauge-inner">
+                    <Doughnut
+                      data={{
+                        labels: ["Converted", "Remaining"],
+                        datasets: [
+                          {
+                            data: [conversionRate, 100 - conversionRate],
+                            backgroundColor: ["#22c55e", "#1e293b"],
+                            borderWidth: 0,
+                          },
+                        ],
+                      }}
+                      options={{
+                        rotation: -90,
+                        circumference: 180,
+                        cutout: "70%",
+                        plugins: {
+                          legend: { display: false },
+                          tooltip: { enabled: false },
+                        },
+                      }}
+                    />
+                    <div className="gauge-value">{conversionRate}%</div>
+                  </div>
                 </div>
               </Chart>
 
-              {/* Stage Distribution */}
               <Chart title="Contributor Stage Distribution">
                 <Doughnut
                   data={{

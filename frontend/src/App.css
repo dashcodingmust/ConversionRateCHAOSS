@@ -184,3 +184,26 @@ body,
     transform: rotate(360deg);
   }
 }
+
+
+.gauge-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 260px;
+}
+
+.gauge-inner {
+  position: relative;
+  width: 80%;
+}
+
+.gauge-value {
+  position: absolute;
+  top: 65%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 28px;
+  font-weight: bold;
+  color: #ffffff;
+}
