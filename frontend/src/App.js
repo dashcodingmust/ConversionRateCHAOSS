@@ -52,17 +52,25 @@ function App() {
     setLoading(false);
   };
 
+  const mergeRate = results?.["PR Metrics"]?.merge_rate || 0;
+  const avgMergeTime = results?.["PR Metrics"]?.avg_merge_time_days || 0;
+  const backlogRatio = results?.["PR Backlog"]?.backlog_ratio || 0;
+  const activeMaintainers = results?.["Active Maintainers"] || 0;
   const latestWeeklyCommits =
     results?.["Commit Trend"]?.commit_counts?.slice(-1)[0] || 0;
 
-  const healthScore = results
-    ? Math.round(
-        ((results["PR Merge Rate"] || 0) +
-          Math.min(results["Active Maintainers"] || 0, 50) * 2 +
-          Math.min(latestWeeklyCommits, 100)) /
-          3,
-      )
-    : 0;
+  const speedScore = Math.max(0, 100 - avgMergeTime * 10);
+  const backlogScore = Math.max(0, 100 - backlogRatio * 30);
+  const maintainerScore = Math.min(activeMaintainers * 5, 100);
+  const commitScore = Math.min(latestWeeklyCommits * 2, 100);
+
+  const healthScore = Math.round(
+    mergeRate * 0.25 +
+      speedScore * 0.15 +
+      backlogScore * 0.2 +
+      maintainerScore * 0.2 +
+      commitScore * 0.2,
+  );
 
   const conversionRate =
     results?.["Contributor Engagement"]?.conversion_rate || 0;
@@ -89,7 +97,8 @@ function App() {
         <input
           type="range"
           min="1"
-          max="50"
+          max="100"
+          step="1"
           value={threshold}
           onChange={(e) => setThreshold(Number(e.target.value))}
         />
@@ -122,13 +131,37 @@ function App() {
               />
               <Card
                 title="PR Merge Rate (%)"
-                value={results["PR Merge Rate"] || 0}
+                value={results["PR Metrics"]?.merge_rate || 0}
                 icon="🔀"
               />
               <Card
                 title="Open Issues"
                 value={results["Issue Backlog"]?.open_issues || 0}
                 icon="🐞"
+              />
+
+              <Card
+                title="Avg Merge Time (days)"
+                value={results["PR Metrics"]?.avg_merge_time_days || 0}
+                icon="⏱️"
+              />
+
+              <Card
+                title="Open PRs"
+                value={results["PR Backlog"]?.open_prs || 0}
+                icon="📂"
+              />
+
+              <Card
+                title="Recently Closed PRs"
+                value={results["PR Backlog"]?.recently_closed_prs || 0}
+                icon="✅"
+              />
+
+              <Card
+                title="Backlog Ratio"
+                value={results["PR Backlog"]?.backlog_ratio || 0}
+                icon="⚖️"
               />
             </div>
 
@@ -221,8 +254,8 @@ function App() {
                     datasets: [
                       {
                         data: [
-                          results["PR Merge Rate"] || 0,
-                          100 - (results["PR Merge Rate"] || 0),
+                          results["PR Metrics"]?.merge_rate || 0,
+                          100 - (results["PR Metrics"]?.merge_rate || 0),
                         ],
                         backgroundColor: ["#22c55e", "#ef4444"],
                       },
