@@ -246,7 +246,6 @@ function App() {
                 />
               </Chart>
 
-              {/* Merge Rate */}
               <Chart title="Merge Rate">
                 <Doughnut
                   data={{
