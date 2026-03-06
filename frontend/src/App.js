@@ -122,8 +122,14 @@ function App() {
 
         {results && (
           <>
+          
             <div className="metrics">
-              <Card title="Health Score" value={healthScore} icon="💚" />
+              <Card
+                title="Health Score"
+                value={healthScore}
+                icon="💚"
+                className="highlight-card"
+              />
               <Card
                 title="Active Maintainers"
                 value={results["Active Maintainers"] || 0}
@@ -194,7 +200,7 @@ function App() {
                 icon="⏳"
               />
             </div>
-
+            <div className="section-divider"></div>
             <div className="chart-grid">
               <Chart title="Weekly Commit Trend">
                 <Line
