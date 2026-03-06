@@ -35,11 +35,24 @@ def issue_backlog(owner, repo):
             break
 
         for item in data:
-            if "pull_request" not in item:
-                open_issues += 1
+            if "pull_request" in item:
+                continue
+            open_issues += 1
+            closed_at = datetime.fromisoformat(
+                item["closed_at"].replace("Z", "+00:00")
+            )
+            if closed_at < cutoff:
+                continue
+            recently_closed += 1
 
         page += 1
+        backlog_ratio = (
+            round(open_issues / recently_closed, 2)
+            if recently_closed > 0 else 0
+        )
 
         return {
-        "open_issues": open_issues
+        "open_issues": open_issues,
+        "recently_closed_issues": recently_closed,
+        "issue_backlog_ratio": backlog_ratio
     }
