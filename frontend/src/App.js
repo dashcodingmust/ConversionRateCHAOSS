@@ -4,6 +4,7 @@ import Card from "./components/card";
 import { calculateHealthScore, getHealthStatus } from "./utils/health";
 import RepoHeader from "./components/repo";
 import Section from "./components/section";
+import ChartWrapper from "./components/chart";
 import "./App.css";
 
 import {
@@ -195,7 +196,7 @@ function App() {
             </Section>
             <div className="section-divider"></div>
             <div className="chart-grid">
-              <Chart title="Weekly Commit Trend">
+              <ChartWrapper title="Weekly Commit Trend">
                 <Line
                   data={{
                     labels: results["Commit Trend"]?.labels || [],
@@ -218,9 +219,9 @@ function App() {
                     },
                   }}
                 />
-              </Chart>
+              </ChartWrapper>
 
-              <Chart title="Conversion Rate Gauge">
+              <ChartWrapper title="Conversion Rate Gauge">
                 <div className="gauge-wrapper">
                   <div className="gauge-inner">
                     <Doughnut
@@ -247,9 +248,9 @@ function App() {
                     <div className="gauge-value">{conversionRate}%</div>
                   </div>
                 </div>
-              </Chart>
+              </ChartWrapper>
 
-              <Chart title="Contributor Stage Distribution">
+              <ChartWrapper title="Contributor Stage Distribution">
                 <Doughnut
                   data={{
                     labels: [
@@ -273,9 +274,9 @@ function App() {
                     maintainAspectRatio: false,
                   }}
                 />
-              </Chart>
+              </ChartWrapper>
 
-              <Chart title="Merge Rate">
+              <ChartWrapper title="Merge Rate">
                 <Doughnut
                   data={{
                     labels: ["Merged", "Rejected"],
@@ -294,7 +295,7 @@ function App() {
                     maintainAspectRatio: false,
                   }}
                 />
-              </Chart>
+              </ChartWrapper>
             </div>
 
             <div className="section">
@@ -349,14 +350,7 @@ function App() {
   );
 }
 
-function Chart({ title, children }) {
-  return (
-    <div className="card chart">
-      <h3>{title}</h3>
-      <div className="chart-container">{children}</div>
-    </div>
-  );
-}
+
 
 function TimelineItem({ title, date, description }) {
   return (
