@@ -1,8 +1,17 @@
 body {
   margin: 0;
   font-family: Inter, system-ui, sans-serif;
-  background: radial-gradient(circle at 20% 0%, #1e293b, #020617 60%);
+  background: #020617;
   color: white;
+  position: relative;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at 20% 0%, #1e293b, #020617 60%);
+  z-index: -1;
 }
 
 html,
@@ -291,4 +300,16 @@ body,
   font-size: 12px;
   color: #94a3b8;
   margin-top: 5px;
+}
+
+.section {
+  margin-bottom: 50px;
+}
+
+.section-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: #cbd5e1;
+  letter-spacing: 0.5px;
 }

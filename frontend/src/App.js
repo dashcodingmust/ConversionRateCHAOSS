@@ -156,82 +156,91 @@ function App() {
                 </div>
               )}
             </div>
-            <div className="metrics">
-              <Card
-                title="Health Score"
-                value={healthScore}
-                icon="💚"
-                className="highlight-card"
-              />
-              <Card
-                title="Active Maintainers"
-                value={results["Active Maintainers"] || 0}
-                icon="👨‍💻"
-              />
-              <Card
-                title="PR Merge Rate (%)"
-                value={results["PR Metrics"]?.merge_rate || 0}
-                icon="🔀"
-              />
+            <div className="section">
+              <h3 className="section-title">🟢 Contribution Health</h3>
+              <div className="metrics">
+                <Card title="Health Score" value={healthScore} icon="💚" />
+                <Card
+                  title="PR Merge Rate (%)"
+                  value={results["PR Metrics"]?.merge_rate || 0}
+                  icon="🔀"
+                />
+                <Card
+                  title="Avg Merge Time (days)"
+                  value={results["PR Metrics"]?.avg_merge_time_days || 0}
+                  icon="⏱️"
+                />
+                <Card
+                  title="Latest Weekly Commits"
+                  value={latestWeeklyCommits}
+                  icon="📊"
+                />
+              </div>
+            </div>
 
-              <Card
-                title="Avg Merge Time (days)"
-                value={results["PR Metrics"]?.avg_merge_time_days || 0}
-                icon="⏱️"
-              />
+            <div className="section">
+              <h3 className="section-title">🟡 Backlog Pressure</h3>
+              <div className="metrics">
+                <Card
+                  title="Open PRs"
+                  value={results["PR Backlog"]?.open_prs || 0}
+                  icon="📂"
+                />
+                <Card
+                  title="Recently Closed PRs"
+                  value={results["PR Backlog"]?.recently_closed_prs || 0}
+                  icon="✅"
+                />
+                <Card
+                  title="PR Backlog Ratio"
+                  value={results["PR Backlog"]?.backlog_ratio || 0}
+                  icon="⚖️"
+                />
+                <Card
+                  title="Open Issues"
+                  value={results["Issue Backlog"]?.open_issues || 0}
+                  icon="🐞"
+                />
+                <Card
+                  title="Recently Closed Issues"
+                  value={results["Issue Backlog"]?.recently_closed_issues || 0}
+                  icon="📦"
+                />
+                <Card
+                  title="Issue Backlog Ratio"
+                  value={results["Issue Backlog"]?.issue_backlog_ratio || 0}
+                  icon="📊"
+                />
+              </div>
+            </div>
 
-              <Card
-                title="Open PRs"
-                value={results["PR Backlog"]?.open_prs || 0}
-                icon="📂"
-              />
-
-              <Card
-                title="Recently Closed PRs"
-                value={results["PR Backlog"]?.recently_closed_prs || 0}
-                icon="✅"
-              />
-
-              <Card
-                title="Backlog Ratio"
-                value={results["PR Backlog"]?.backlog_ratio || 0}
-                icon="⚖️"
-              />
-              <Card
-                title="Open Issues"
-                value={results["Issue Backlog"]?.open_issues || 0}
-                icon="🐞"
-              />
-
-              <Card
-                title="Recently Closed Issues"
-                value={results["Issue Backlog"]?.recently_closed_issues || 0}
-                icon="📦"
-              />
-
-              <Card
-                title="Issue Backlog Ratio"
-                value={results["Issue Backlog"]?.issue_backlog_ratio || 0}
-                icon="⚖️"
-              />
-
-              <Card
-                title="Last Commit Date"
-                value={
-                  results["Last Commit Time"]?.last_commit_date
-                    ? new Date(
-                        results["Last Commit Time"].last_commit_date,
-                      ).toLocaleDateString()
-                    : "N/A"
-                }
-                icon="🗓️"
-              />
-
-              <Card
-                title="Days Since Last Commit"
-                value={results["Last Commit Time"]?.days_since_last_commit || 0}
-                icon="⏳"
-              />
+            <div className="section">
+              <h3 className="section-title">🔵 Activity Signals</h3>
+              <div className="metrics">
+                <Card
+                  title="Active Maintainers"
+                  value={results["Active Maintainers"] || 0}
+                  icon="👨‍💻"
+                />
+                <Card
+                  title="Last Commit Date"
+                  value={
+                    results["Last Commit Time"]?.last_commit_date
+                      ? new Date(
+                          results["Last Commit Time"].last_commit_date,
+                        ).toLocaleDateString()
+                      : "N/A"
+                  }
+                  icon="🗓️"
+                />
+                <Card
+                  title="Days Since Last Commit"
+                  value={
+                    results["Last Commit Time"]?.days_since_last_commit || 0
+                  }
+                  icon="⏳"
+                />
+              </div>
             </div>
             <div className="section-divider"></div>
             <div className="chart-grid">
