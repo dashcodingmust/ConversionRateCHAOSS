@@ -1,31 +1,48 @@
 import requests
-from datetime import datetime, timedelta
-from config import HEADERS
+from datetime import datetime, timedelta, timezone
+from backend.src.config import HEADERS
 
-def active_maintainers(owner, repo):
 
-    url = f"https://api.github.com/repos/{owner}/{repo}/commits"
-    
-    response = requests.get(url, headers=HEADERS)
-
-    data = response.json()
-
-    if not isinstance(data, list):
-        return "GitHub API error"
-
-    cutoff = datetime.utcnow() - timedelta(days=90)
+def active_maintainers(owner, repo, days=90):
+    page = 1
     maintainers = set()
 
-    for commit in data:
+    cutoff = datetime.now(timezone.utc) - timedelta(days=days)
 
-        try:
-            date_str = commit["commit"]["author"]["date"]
-            date = datetime.strptime(date_str, "%Y-%m-%dT%H:%M:%SZ")
+    while True:
+        url = f"https://api.github.com/repos/{owner}/{repo}/commits"
+        params = {
+            "per_page": 100,
+            "page": page
+        }
 
-            if date > cutoff:
-                maintainers.add(commit["commit"]["author"]["name"])
+        response = requests.get(
+            url,
+            headers=HEADERS,
+            params=params,
+            timeout=10
+        )
 
-        except:
-            continue
+        if response.status_code != 200:
+            break
+
+        data = response.json()
+
+        if not data:
+            break
+
+        for commit in data:
+            commit_date_str = commit["commit"]["author"]["date"]
+            commit_date = datetime.fromisoformat(
+                commit_date_str.replace("Z", "+00:00")
+            )
+
+            if commit_date < cutoff:
+                continue
+
+            if commit.get("author") and commit["author"].get("login"):
+                maintainers.add(commit["author"]["login"])
+
+        page += 1
 
     return len(maintainers)
