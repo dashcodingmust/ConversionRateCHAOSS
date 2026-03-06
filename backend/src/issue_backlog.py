@@ -1,5 +1,5 @@
 import requests
-from backend.src.config import HEADERS
+from config import HEADERS
 def backlog_status(issue_count):
     if issue_count <= 20:
         return "Healthy"

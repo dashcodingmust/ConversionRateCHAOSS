@@ -1,6 +1,6 @@
 import requests
 from datetime import datetime, timedelta
-from backend.src.config import HEADERS
+from config import HEADERS
 
 def active_maintainers(owner, repo):
 

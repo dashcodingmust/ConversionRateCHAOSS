@@ -1,5 +1,5 @@
 import requests
-from backend.src.config import HEADERS
+from config import HEADERS
 def last_commit_time(limit, owner, repo):
 
     url = f"https://api.github.com/repos/{owner}/{repo}/commits"

@@ -1,6 +1,6 @@
 import requests
 import pandas as pd
-from backend.src.config import HEADERS
+from config import HEADERS
 
 
 def stage(x, threshold):

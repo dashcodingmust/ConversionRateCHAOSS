@@ -1,6 +1,6 @@
 import requests
 from datetime import datetime, timedelta, timezone
-from backend.src.config import HEADERS
+from config import HEADERS
 
 
 def pr_metrics(owner, repo, days=90):
