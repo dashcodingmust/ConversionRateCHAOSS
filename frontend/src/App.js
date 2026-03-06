@@ -52,21 +52,33 @@ function App() {
     setLoading(false);
   };
 
+  const latestWeeklyCommits =
+    results?.["Commit Trend"]?.commit_counts?.slice(-1)[0] || 0;
+
   const healthScore = results
     ? Math.round(
         ((results["PR Merge Rate"] || 0) +
           Math.min(results["Active Maintainers"] || 0, 50) * 2 +
-          Math.min(results["Commit Trend"]?.recent_commits || 0, 100)) /
+          Math.min(latestWeeklyCommits, 100)) /
           3,
       )
     : 0;
 
+  const conversionRate =
+    results?.["Contributor Engagement"]?.conversion_rate || 0;
+
+  const stageDistribution = results?.["Contributor Engagement"]
+    ?.stage_distribution || {
+    D0: 0,
+    D1: 0,
+    D2: 0,
+  };
+
   return (
     <div className="app">
       {/* SIDEBAR */}
-
       <div className="sidebar">
-        <h2> Configuration</h2>
+        <h2>Configuration</h2>
 
         <label>Repository Owner</label>
         <input value={owner} onChange={(e) => setOwner(e.target.value)} />
@@ -75,13 +87,12 @@ function App() {
         <input value={repo} onChange={(e) => setRepo(e.target.value)} />
 
         <label>Contributor Threshold</label>
-
         <input
           type="range"
           min="1"
           max="50"
           value={threshold}
-          onChange={(e) => setThreshold(e.target.value)}
+          onChange={(e) => setThreshold(Number(e.target.value))}
         />
 
         <div className="threshold">Threshold: {threshold}</div>
@@ -89,26 +100,11 @@ function App() {
         <button className="run-btn" onClick={analyzeRepo}>
           🚀 Run Analysis
         </button>
-
-        <div className="help-box">
-          <b>How to use</b>
-          <ol>
-            <li>Enter repository owner</li>
-            <li>Enter repository name</li>
-            <li>Adjust contributor threshold</li>
-            <li>Click Run Analysis</li>
-          </ol>
-        </div>
       </div>
 
       {/* MAIN */}
-
       <div className="main">
         <h1 className="title">GitHub Project Health Dashboard</h1>
-
-        <p className="subtitle">
-          Analyze repository activity, contributors, and project sustainability
-        </p>
 
         {loading && (
           <div className="loading">
@@ -120,82 +116,98 @@ function App() {
         {results && (
           <>
             {/* METRICS */}
-
             <div className="metrics">
               <Card title="Health Score" value={healthScore} icon="💚" />
               <Card
                 title="Active Maintainers"
-                value={results["Active Maintainers"]}
+                value={results["Active Maintainers"] || 0}
                 icon="👨‍💻"
               />
               <Card
-                title="PR Merge Rate"
-                value={results["PR Merge Rate"]}
+                title="PR Merge Rate (%)"
+                value={results["PR Merge Rate"] || 0}
                 icon="🔀"
               />
               <Card
                 title="Open Issues"
-                value={results["Issue Backlog"]?.open_issues}
+                value={results["Issue Backlog"]?.open_issues || 0}
                 icon="🐞"
               />
             </div>
 
             {/* CHARTS */}
-
             <div className="chart-grid">
-              <Chart title="Commit Trend">
+              {/* Weekly Trend */}
+              <Chart title="Weekly Commit Trend">
                 <Line
                   data={{
-                    labels: ["Previous", "Recent"],
+                    labels: results["Commit Trend"]?.labels || [],
                     datasets: [
                       {
-                        label: "Commits",
-                        data: [
-                          results["Commit Trend"]?.previous_commits || 0,
-                          results["Commit Trend"]?.recent_commits || 0,
-                        ],
+                        label: "Weekly Commits",
+                        data: results["Commit Trend"]?.commit_counts || [],
                         borderColor: "#22c55e",
-                        backgroundColor: "#22c55e",
+                        backgroundColor: "rgba(34,197,94,0.2)",
+                        tension: 0.3,
+                        fill: true,
                       },
                     ],
                   }}
                   options={{
                     responsive: true,
                     maintainAspectRatio: false,
+                    scales: {
+                      y: { beginAtZero: true },
+                    },
                   }}
                 />
               </Chart>
 
-              <Chart title="Issue Backlog">
-                <Bar
-                  data={{
-                    labels: ["Open Issues"],
-                    datasets: [
-                      {
-                        label: "Issues",
-                        data: [results["Issue Backlog"]?.open_issues || 0],
-                        backgroundColor: "#ef4444",
-                      },
-                    ],
-                  }}
-                  options={{
-                    responsive: true,
-                    maintainAspectRatio: false,
-                  }}
-                />
-              </Chart>
-
-              <Chart title="Maintainer Capacity">
+              {/* Conversion Gauge */}
+              <Chart title="Conversion Rate Gauge">
                 <Doughnut
                   data={{
-                    labels: ["Maintainers", "Remaining"],
+                    labels: ["Converted", "Remaining"],
+                    datasets: [
+                      {
+                        data: [conversionRate, 100 - conversionRate],
+                        backgroundColor: ["#22c55e", "#1e293b"],
+                        borderWidth: 0,
+                      },
+                    ],
+                  }}
+                  options={{
+                    rotation: -90,
+                    circumference: 180,
+                    cutout: "70%",
+                    plugins: {
+                      legend: { display: false },
+                      tooltip: { enabled: false },
+                    },
+                  }}
+                />
+                <div style={{ textAlign: "center", marginTop: "-20px" }}>
+                  <h2>{conversionRate}%</h2>
+                </div>
+              </Chart>
+
+              {/* Stage Distribution */}
+              <Chart title="Contributor Stage Distribution">
+                <Doughnut
+                  data={{
+                    labels: [
+                      "D0 (One-time)",
+                      "D1 (Occasional)",
+                      "D2 (Regular)",
+                    ],
                     datasets: [
                       {
                         data: [
-                          results["Active Maintainers"],
-                          50 - results["Active Maintainers"],
+                          stageDistribution.D0,
+                          stageDistribution.D1,
+                          stageDistribution.D2,
                         ],
-                        backgroundColor: ["#3b82f6", "#1e293b"],
+                        backgroundColor: ["#ef4444", "#f59e0b", "#22c55e"],
                       },
                     ],
                   }}
@@ -206,6 +218,7 @@ function App() {
                 />
               </Chart>
 
+              {/* Merge Rate */}
               <Chart title="Merge Rate">
                 <Doughnut
                   data={{
@@ -213,8 +226,8 @@ function App() {
                     datasets: [
                       {
                         data: [
-                          results["PR Merge Rate"],
-                          100 - results["PR Merge Rate"],
+                          results["PR Merge Rate"] || 0,
+                          100 - (results["PR Merge Rate"] || 0),
                         ],
                         backgroundColor: ["#22c55e", "#ef4444"],
                       },
@@ -241,7 +254,6 @@ function Card({ title, value, icon }) {
         <span className="icon">{icon}</span>
         <span className="metric-title">{title}</span>
       </div>
-
       <div className="metric-value">{value}</div>
     </div>
   );
