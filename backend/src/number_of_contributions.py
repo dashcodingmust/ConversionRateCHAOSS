@@ -1,4 +1,4 @@
-import requests
+import httpx
 import pandas as pd
 from config import HEADERS
 
@@ -12,26 +12,26 @@ def stage(x, threshold):
         return "D1"          
 
 
-def investment(owner, repo, threshold):
+async def investment(owner, repo, threshold):
     contributors = []
     page = 1
 
-    while True:
-        url = f"https://api.github.com/repos/{owner}/{repo}/contributors?per_page=100&page={page}"
-        response = requests.get(url, headers=HEADERS)
+    async with httpx.AsyncClient() as client:
+        while True:
+            url = f"https://api.github.com/repos/{owner}/{repo}/contributors?per_page=100&page={page}"
+            response = await client.get(url, headers=HEADERS)
 
-        if response.status_code != 200:
-            return {"conversion_rate": 0, "status": "API error"}
+            if response.status_code != 200:
+                return {"conversion_rate": 0, "status": "API error"}
 
-        data = response.json()
+            data = response.json()
 
-        if not data:
-            break
+            if not data:
+                break
 
-        contributors.extend(data)
-        page += 1
+            contributors.extend(data)
+            page += 1
 
-    # Filter only real users
     contributors = [
         c for c in contributors if c.get("type") == "User"
     ]

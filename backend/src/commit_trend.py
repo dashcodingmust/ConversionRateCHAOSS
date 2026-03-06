@@ -1,44 +1,45 @@
-import requests
+import httpx
 from datetime import datetime, timedelta
 from collections import defaultdict
 from config import HEADERS
 
 
-def commit_trend(owner, repo, days=90):
+async def commit_trend(owner, repo, days=90):
     now = datetime.utcnow()
     since = (now - timedelta(days=days)).isoformat()
 
     page = 1
     commits = []
 
-    while True:
-        url = f"https://api.github.com/repos/{owner}/{repo}/commits"
-        params = {
-            "since": since,
+    async with httpx.AsyncClient() as client:
+        while True:
+            url = f"https://api.github.com/repos/{owner}/{repo}/commits"
+            params = {
+                "since": since,
             "per_page": 100,
             "page": page
         }
 
-        response = requests.get(
+            response = await client.get(
             url,
             headers=HEADERS,
             params=params,
             timeout=10
         )
 
-        if response.status_code == 403:
-            return {"status": "Rate limit exceeded"}
+            if response.status_code == 403:
+                return {"status": "Rate limit exceeded"}
 
-        if response.status_code != 200:
-            return {"status": "API error"}
+            if response.status_code != 200:
+                return {"status": "API error"}
 
-        data = response.json()
+            data = response.json()
 
-        if not data:
-            break
+            if not data:
+                break
 
-        commits.extend(data)
-        page += 1
+            commits.extend(data)
+            page += 1
 
     weekly_counts = defaultdict(int)
 

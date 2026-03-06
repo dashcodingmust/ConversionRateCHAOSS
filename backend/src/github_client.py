@@ -12,4 +12,4 @@ class GitHubClient:
                 params=params,
                 timeout=10
             )
-            return response.json()
+            return response.json()  

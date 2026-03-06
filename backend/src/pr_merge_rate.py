@@ -1,9 +1,9 @@
-import requests
+import httpx
 from datetime import datetime, timedelta, timezone
 from config import HEADERS
 
 
-def pr_metrics(owner, repo, days=90):
+async def pr_metrics(owner, repo, days=90):
     page = 1
     merged = 0
     total_closed = 0
@@ -11,9 +11,10 @@ def pr_metrics(owner, repo, days=90):
 
     cutoff_date = datetime.now(timezone.utc) - timedelta(days=days)
 
-    while True:
-        url = f"https://api.github.com/repos/{owner}/{repo}/pulls"
-        params = {
+    async with httpx.AsyncClient() as client:
+        while True:
+            url = f"https://api.github.com/repos/{owner}/{repo}/pulls"
+            params = {
             "state": "closed",
             "per_page": 100,
             "page": page,
@@ -21,45 +22,45 @@ def pr_metrics(owner, repo, days=90):
             "direction": "desc"
         }
 
-        response = requests.get(
-            url,
-            headers=HEADERS,
-            params=params,
-            timeout=10
-        )
-
-        if response.status_code != 200:
-            break
-
-        data = response.json()
-
-        if not data:
-            break
-
-        for pr in data:
-            closed_at = datetime.fromisoformat(
-                pr["closed_at"].replace("Z", "+00:00")
+            response = await client.get(
+                url,
+                headers=HEADERS,
+                params=params,
+                timeout=10
             )
 
-            if closed_at < cutoff_date:
-                continue
+            if response.status_code != 200:
+                break
 
-            total_closed += 1
+            data = response.json()
 
-            if pr.get("merged_at") is not None:
-                merged += 1
+            if not data:
+                break
 
-                created_at = datetime.fromisoformat(
-                    pr["created_at"].replace("Z", "+00:00")
-                )
-                merged_at = datetime.fromisoformat(
-                    pr["merged_at"].replace("Z", "+00:00")
+            for pr in data:
+                closed_at = datetime.fromisoformat(
+                    pr["closed_at"].replace("Z", "+00:00")
                 )
 
-                merge_time_days = (merged_at - created_at).days
-                total_merge_time_days += merge_time_days
+                if closed_at < cutoff_date:
+                    continue
 
-        page += 1
+                total_closed += 1
+
+                if pr.get("merged_at") is not None:
+                    merged += 1
+
+                    created_at = datetime.fromisoformat(
+                        pr["created_at"].replace("Z", "+00:00")
+                    )
+                    merged_at = datetime.fromisoformat(
+                        pr["merged_at"].replace("Z", "+00:00")
+                    )
+
+                    merge_time_days = (merged_at - created_at).days
+                    total_merge_time_days += merge_time_days
+
+            page += 1
 
     if total_closed == 0:
         return {
