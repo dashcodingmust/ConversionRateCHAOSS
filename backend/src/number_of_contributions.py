@@ -2,14 +2,7 @@ import requests
 import pandas as pd
 from backend.src.config import HEADERS
 
-
-def stage(x, threshold):
-    if x <= 1:
-        return "D0"          
-    elif x >= threshold:
-        return "D2"         
-    else:
-        return "D1"          
+    
 
 
 def investment(owner, repo, threshold):
