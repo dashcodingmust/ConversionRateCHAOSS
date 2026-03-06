@@ -1,16 +1,16 @@
 import asyncio
-from number_of_contributions import conversion_metric
-from commit_trend import commit_metrics
+from number_of_contributions import investment
+from commit_trend import commit_trend
 from pr_merge_rate import pr_metrics
-from issue_backlog import issue_metrics
+from issue_backlog import issue_backlog
 from active_maintainers import active_maintainers
 
-async def analyze_repo(owner, repo):
+async def analyze_repo(owner, repo, threshold):
     results = await asyncio.gather(
-        conversion_metric(owner, repo),
-        commit_metrics(owner, repo),
+        investment(owner, repo, threshold),
+        commit_trend(owner, repo),
         pr_metrics(owner, repo),
-        issue_metrics(owner, repo),
+        issue_backlog(owner, repo),
         active_maintainers(owner, repo)
     )
 
