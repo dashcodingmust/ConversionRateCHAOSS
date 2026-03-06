@@ -3,6 +3,7 @@ import axios from "axios";
 import Card from "./components/card";
 import { calculateHealthScore, getHealthStatus } from "./utils/health";
 import RepoHeader from "./components/repo";
+import Section from "./components/section";
 import "./App.css";
 
 import {
@@ -109,8 +110,7 @@ function App() {
         {results && (
           <>
             <RepoHeader owner={owner} repo={repo} healthScore={healthScore} />
-            <div className="section">
-              <h3 className="section-title">🟢 Contribution Health</h3>
+            <Section title="🟢 Contribution Health">
               <div className="metrics">
                 <Card title="Health Score" value={healthScore} icon="💚" />
                 <Card
@@ -129,10 +129,9 @@ function App() {
                   icon="📊"
                 />
               </div>
-            </div>
+            </Section>
 
-            <div className="section">
-              <h3 className="section-title">🟡 Backlog Pressure</h3>
+            <Section title="🟡 Backlog Pressure">
               <div className="metrics">
                 <Card
                   title="Open PRs"
@@ -165,10 +164,9 @@ function App() {
                   icon="📊"
                 />
               </div>
-            </div>
+            </Section>
 
-            <div className="section">
-              <h3 className="section-title">🔵 Activity Signals</h3>
+            <Section title="🔵 Activity Signals">
               <div className="metrics">
                 <Card
                   title="Active Maintainers"
@@ -194,7 +192,7 @@ function App() {
                   icon="⏳"
                 />
               </div>
-            </div>
+            </Section>
             <div className="section-divider"></div>
             <div className="chart-grid">
               <Chart title="Weekly Commit Trend">
