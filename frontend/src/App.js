@@ -255,7 +255,7 @@ function App() {
                 <Doughnut
                   data={{
                     labels: [
-                      "D0 (Less than 10)",
+                      "D0 (Less than 20)",
                       "D1 (Occasional)",
                       "D2 (Regular)",
                     ],
