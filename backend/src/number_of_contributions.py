@@ -4,7 +4,7 @@ from config import HEADERS
 
 
 def stage(x, threshold):
-    if x <= 1:
+    if x <= 20:
         return "D0"          
     elif x >= threshold:
         return "D2"         

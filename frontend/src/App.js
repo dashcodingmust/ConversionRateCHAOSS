@@ -85,8 +85,8 @@ function App() {
         <label>Contributor Threshold</label>
         <input
           type="range"
-          min="1"
-          max="100"
+          min="21"
+          max="150"
           step="1"
           value={threshold}
           onChange={(e) => setThreshold(Number(e.target.value))}
@@ -255,7 +255,7 @@ function App() {
                 <Doughnut
                   data={{
                     labels: [
-                      "D0 (One-time)",
+                      "D0 (Less than 10)",
                       "D1 (Occasional)",
                       "D2 (Regular)",
                     ],
@@ -306,8 +306,6 @@ function App() {
     </div>
   );
 }
-
-
 
 function TimelineItem({ title, date, description }) {
   return (
