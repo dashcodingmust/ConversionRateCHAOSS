@@ -44,7 +44,7 @@ def _cache_set(key: str, data, ttl: int):
     _cache[key] = {"data": data, "expires_at": time.time() + ttl}
 # ---------------------------------------------------------------------------
 
-allowed_origins = [*]
+allowed_origins = os.getenv("ALLOWED_ORIGINS","http://localhost:3000").split(",")
 
 app.add_middleware(
     CORSMiddleware,
