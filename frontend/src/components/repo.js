@@ -1,29 +1,11 @@
 import { getHealthStatus } from "../utils/health";
 
-<<<<<<< HEAD
-function RepoHeader({ owner, repo, healthScore }) {
-=======
 function RepoHeader({ owner, repo, healthScore, meta }) {
->>>>>>> master
   const status = getHealthStatus(healthScore);
 
   return (
     <div className="repo-header">
       <div className="repo-info">
-<<<<<<< HEAD
-        <h2 className="repo-name">
-          {owner && repo ? `${owner}/${repo}` : "Repository Overview"}
-        </h2>
-
-        <div className="repo-meta">
-          <span>
-            Last Updated: {new Date().toLocaleTimeString()}
-          </span>
-
-          <span className={`health-badge ${status.class}`}>
-            {status.label}
-          </span>
-=======
         <div className="repo-name-row">
           <h2 className="repo-name">
             {meta?.full_name || (owner && repo ? `${owner}/${repo}` : "Repository Overview")}
@@ -51,7 +33,6 @@ function RepoHeader({ owner, repo, healthScore, meta }) {
           )}
           <span>Updated: {new Date().toLocaleTimeString()}</span>
           <span className={`health-badge ${status.class}`}>{status.label}</span>
->>>>>>> master
         </div>
       </div>
 
@@ -63,8 +44,4 @@ function RepoHeader({ owner, repo, healthScore, meta }) {
   );
 }
 
-<<<<<<< HEAD
 export default RepoHeader;
-=======
-export default RepoHeader;
->>>>>>> master
