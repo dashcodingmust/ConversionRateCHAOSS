@@ -1,10 +1,18 @@
 import httpx
 from datetime import datetime, timedelta, timezone
+<<<<<<< HEAD
 from config import HEADERS
 
 
 async def issue_backlog(owner, repo, days=90):
     MAX_PAGES = 15
+=======
+from config import get_headers
+
+
+async def issue_backlog(owner, repo, days=90):
+    MAX_PAGES = 8
+>>>>>>> master
     page = 1
     open_issues = 0
     recently_closed = 0
@@ -17,6 +25,7 @@ async def issue_backlog(owner, repo, days=90):
             params = {
                 "state": "open",
                 "per_page": 100,
+<<<<<<< HEAD
             "page": page
         }
 
@@ -26,6 +35,17 @@ async def issue_backlog(owner, repo, days=90):
             params=params,
             timeout=10
         )
+=======
+                "page": page
+            }
+
+            response = await client.get(
+                url,
+                headers=get_headers(),
+                params=params,
+                timeout=10
+            )
+>>>>>>> master
 
             if response.status_code != 200:
                 break
@@ -41,10 +61,16 @@ async def issue_backlog(owner, repo, days=90):
 
             page += 1
 
+<<<<<<< HEAD
    
         page = 1
         
         while page<=MAX_PAGES:
+=======
+        page = 1
+
+        while page <= MAX_PAGES:
+>>>>>>> master
             url = f"https://api.github.com/repos/{owner}/{repo}/issues"
             params = {
                 "state": "closed",
@@ -56,7 +82,11 @@ async def issue_backlog(owner, repo, days=90):
 
             response = await client.get(
                 url,
+<<<<<<< HEAD
                 headers=HEADERS,
+=======
+                headers=get_headers(),
+>>>>>>> master
                 params=params,
                 timeout=10
             )
@@ -69,6 +99,11 @@ async def issue_backlog(owner, repo, days=90):
             if not data:
                 break
 
+<<<<<<< HEAD
+=======
+            all_older_than_cutoff = True
+
+>>>>>>> master
             for item in data:
                 if "pull_request" in item:
                     continue
@@ -78,8 +113,17 @@ async def issue_backlog(owner, repo, days=90):
                 )
 
                 if closed_at >= cutoff:
+<<<<<<< HEAD
                     recently_closed += 1
 
+=======
+                    all_older_than_cutoff = False
+                    recently_closed += 1
+
+            if all_older_than_cutoff:
+                break
+
+>>>>>>> master
             page += 1
 
     backlog_ratio = (
@@ -91,4 +135,8 @@ async def issue_backlog(owner, repo, days=90):
         "open_issues": open_issues,
         "recently_closed_issues": recently_closed,
         "issue_backlog_ratio": backlog_ratio
+<<<<<<< HEAD
     }
+=======
+    }
+>>>>>>> master

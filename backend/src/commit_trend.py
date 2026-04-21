@@ -1,4 +1,5 @@
 import httpx
+<<<<<<< HEAD
 from datetime import datetime, timedelta
 from collections import defaultdict
 from config import HEADERS
@@ -7,12 +8,25 @@ from config import HEADERS
 async def commit_trend(owner, repo, days=90):
     
     now = datetime.utcnow()
+=======
+from datetime import datetime, timedelta, timezone
+from collections import defaultdict
+from config import get_headers
+
+MAX_PAGES = 5  # commits are filtered by `since`, so 500 results is plenty
+
+
+async def commit_trend(owner, repo, days=90):
+
+    now = datetime.now(timezone.utc)
+>>>>>>> master
     since = (now - timedelta(days=days)).isoformat()
 
     page = 1
     commits = []
 
     async with httpx.AsyncClient() as client:
+<<<<<<< HEAD
         while True:
             url = f"https://api.github.com/repos/{owner}/{repo}/commits"
             params = {
@@ -27,6 +41,22 @@ async def commit_trend(owner, repo, days=90):
             params=params,
             timeout=10
         )
+=======
+        while page <= MAX_PAGES:
+            url = f"https://api.github.com/repos/{owner}/{repo}/commits"
+            params = {
+                "since": since,
+                "per_page": 100,
+                "page": page
+            }
+
+            response = await client.get(
+                url,
+                headers=get_headers(),
+                params=params,
+                timeout=10
+            )
+>>>>>>> master
 
             if response.status_code == 403:
                 return {"status": "Rate limit exceeded"}
@@ -67,4 +97,8 @@ async def commit_trend(owner, repo, days=90):
     return {
         "labels": all_weeks,
         "commit_counts": commit_counts
+<<<<<<< HEAD
     }
+=======
+    }
+>>>>>>> master

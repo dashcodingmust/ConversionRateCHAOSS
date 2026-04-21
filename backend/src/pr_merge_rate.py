@@ -1,9 +1,16 @@
 import httpx
 from datetime import datetime, timedelta, timezone
+<<<<<<< HEAD
 from config import HEADERS
 
 
 MAX_PAGES = 20  
+=======
+from config import get_headers
+
+
+MAX_PAGES = 8  # 800 PRs per window is sufficient for most repos
+>>>>>>> master
 
 async def pr_metrics(owner, repo, days=90):
 
@@ -29,7 +36,11 @@ async def pr_metrics(owner, repo, days=90):
 
             response = await client.get(
                 url,
+<<<<<<< HEAD
                 headers=HEADERS,
+=======
+                headers=get_headers(),
+>>>>>>> master
                 params=params,
                 timeout=10
             )
@@ -112,7 +123,11 @@ async def pr_backlog(owner, repo, days=90):
 
             response = await client.get(
                 url,
+<<<<<<< HEAD
                 headers=HEADERS,
+=======
+                headers=get_headers(),
+>>>>>>> master
                 params=params,
                 timeout=10
             )
@@ -142,7 +157,11 @@ async def pr_backlog(owner, repo, days=90):
 
             response = await client.get(
                 url,
+<<<<<<< HEAD
                 headers=HEADERS,
+=======
+                headers=get_headers(),
+>>>>>>> master
                 params=params,
                 timeout=10
             )
