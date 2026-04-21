@@ -182,8 +182,6 @@ body,
   width: 100%;
 }
 
-<<<<<<< HEAD
-=======
 /* AUTOCOMPLETE */
 
 .autocomplete-wrapper {
@@ -602,7 +600,6 @@ body,
   flex-shrink: 0;
 }
 
->>>>>>> master
 /* LOADING */
 
 .loading {
@@ -783,8 +780,6 @@ body,
   font-size: 13px;
   color: #cbd5e1;
 }
-<<<<<<< HEAD
-=======
 
 /* ── COMPARE VIEW ──────────────────────────────────────── */
 
@@ -1102,4 +1097,3 @@ body,
   padding: 2px 7px;
   border-radius: 10px;
 }
->>>>>>> master
