@@ -1,10 +1,6 @@
 import httpx
 from datetime import datetime, timezone
-<<<<<<< HEAD
-from config import HEADERS
-=======
 from config import get_headers
->>>>>>> master
 
 
 async def last_commit_time(owner, repo):
@@ -13,11 +9,7 @@ async def last_commit_time(owner, repo):
     async with httpx.AsyncClient() as client:
         response = await client.get(
             url,
-<<<<<<< HEAD
-            headers=HEADERS,
-=======
             headers=get_headers(),
->>>>>>> master
             timeout=10
         )
 
