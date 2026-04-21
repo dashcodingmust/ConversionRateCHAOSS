@@ -1,12 +1,3 @@
-<<<<<<< HEAD
-from fastapi import FastAPI
-from pydantic import BaseModel
-from fastapi.middleware.cors import CORSMiddleware
-import time
-
-from analyzer import analyze_repo
-
-=======
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
@@ -16,17 +7,10 @@ import httpx
 
 from analyzer import analyze_repo
 from config import API_KEYS, get_active_key_name, set_active_key, get_headers
->>>>>>> master
 
 
 app = FastAPI()
 
-<<<<<<< HEAD
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
-=======
 # ---------------------------------------------------------------------------
 # Simple in-memory TTL cache
 # ---------------------------------------------------------------------------
@@ -44,27 +28,21 @@ def _cache_set(key: str, data, ttl: int):
     _cache[key] = {"data": data, "expires_at": time.time() + ttl}
 # ---------------------------------------------------------------------------
 
-allowed_origins = os.getenv("ALLOWED_ORIGINS","http://localhost:3000").split(",")
+allowed_origins = os.getenv("ALLOWED_ORIGINS", "http://localhost:3000").split(",")
 
 app.add_middleware(
     CORSMiddleware,
     allow_origins=allowed_origins,
->>>>>>> master
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-<<<<<<< HEAD
-=======
 
->>>>>>> master
 class RepoRequest(BaseModel):
     owner: str
     repo: str
     threshold: int
-<<<<<<< HEAD
-=======
     days: int = 90
 
 
@@ -102,21 +80,10 @@ async def list_repos(owner: str):
                 return result
 
     raise HTTPException(status_code=404, detail=f"Owner '{owner}' not found on GitHub.")
->>>>>>> master
 
 
 @app.post("/analyze")
 async def analyze(data: RepoRequest):
-<<<<<<< HEAD
-    start = time.time()
-    result= await analyze_repo(
-        data.owner,
-        data.repo,
-        data.threshold
-    )
-    print("Total Time:", time.time() - start)
-    return result
-=======
     cache_key = f"analyze:{data.owner}:{data.repo}:{data.threshold}:{data.days}"
     cached = _cache_get(cache_key)
     if cached is not None:
@@ -197,7 +164,3 @@ async def switch_key(body: SwitchKeyRequest):
     # Bust cache so next requests use the new key's quota
     _cache.clear()
     return {"active": get_active_key_name(), "message": f"Switched to '{body.name}'. Cache cleared."}
-
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5000)
->>>>>>> master
